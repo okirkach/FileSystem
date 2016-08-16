@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html ng-app="FileSystem">
+<head>
+    @*    CSS*@
+    <link rel="stylesheet" href="~/Content/bootstrap.css"/>
+    <link rel="stylesheet" href="~/Content/system.css"/>
+    <link rel="stylesheet" href="~/Content/preloader.css"/>
+    @*    JS*@
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.0.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular-animate.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular-resource.js"></script>
+    <script type="text/javascript" src="~/Scripts/angular-route.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/index.js"></script>
+
+</head>
+<body>
+<div id="header">FileSystem</div>
+<div ng-controller="FileSystemCtrl as fileSystem" class="content">
+    <table id="FilesSizes" ng-show="fileSystem.currentPath">
+        <tr>
+            <th>Less 10Mb</th>
+            <th>10Mb-50Mb</th>
+            <th>More 100Mb</th>
+        </tr>
+        <tr ng-hide="fileSystem.calculationCanceled">
+            <td>{{fileSystem.smallFiles}}</td>
+            <td>{{fileSystem.mediumFiles}}</td>
+            <td>{{fileSystem.largeFiles}}</td>
+        </tr>
+        <tr ng-show="fileSystem.calculationCanceled">
+            <td colspan="3"> Calculation of files was canceled.</td>
+        </tr>
+    </table>
+    <div id="diskDrives">
+        <span ng-repeat="disk in fileSystem.disks" 
+              ng-click="fileSystem.changeDisk(disk)"
+              class="diskDrive">
+            <i class="glyphicon glyphicon-hdd"></i>
+            {{disk}}
+        </span>
+        <span class="diskRefresh" ng-click="fileSystem.getDisks()"><i class="glyphicon glyphicon-refresh"></i></span>
+    </div>
+    <div ng-hide="!fileSystem.currentPath" class="path">
+        <b>Current Path:</b> {{fileSystem.currentPath}}
+    </div>
+    <ul class="list-unstyled">
+        <li ng-click="fileSystem.getStructure()" ng-hide="fileSystem.isRoot">
+            <span class="element">..</span>
+        </li>
+        <li ng-repeat="folder in fileSystem.folders">
+            <span ng-click="fileSystem.getStructure(folder)" class="element"><i class="glyphicon glyphicon-folder-open"></i> {{folder}}</span>
+        </li>
+        <li ng-repeat="file in fileSystem.files">
+            <span class="element"><i class="glyphicon glyphicon-file"></i>{{file}}</span>
+        </li>
+    </ul>
+    <div id="preloader" ng-show="fileSystem.loading">
+        <div class="cssload-container">
+            <div class="cssload-whirlpool"></div>
+        </div>
+    </div>
+    <div id="cancelCalculation" ng-show="fileSystem.cancelCalculation">
+        <p>
+            Calculation of files is going more than 5 second. Maybe You have too much files in this folder.
+            Do You want to wait when files will be calculated or stop the calculation?
+        </p>
+        <button class="btn btn-default" ng-click="fileSystem.refuseCancelation()">Wait</button>
+        <button class="btn btn-danger" ng-click="fileSystem.cancel()">Stop</button>
+    </div>
+
+</div>
+</body>
+</html>

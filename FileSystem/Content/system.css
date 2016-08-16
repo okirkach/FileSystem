@@ -1,0 +1,119 @@
+﻿#header {
+    background: #00ced1;
+    box-shadow: 0 4px 8px black;
+    font-size: 40px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    width: 100%;
+}
+
+.content {
+    margin: auto;
+    position: relative;
+    width: 60%;
+}
+
+#FilesSizes {
+    border: solid 1px lightgray;
+    margin: 20px auto;
+    text-align: center;
+    width: 80%;
+}
+
+#FilesSizes th {
+    background: lightgray;
+    padding: 5px;
+    text-align: center;
+}
+
+#FilesSizes td {
+    border: solid 1px lightgray;
+    padding: 10px;
+}
+
+#diskDrives {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.diskDrive {
+    background: #f0f0f0;
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px black;
+    cursor: pointer;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    margin: 5px 10px;
+    text-align: center;
+    vertical-align: middle;
+    width: 80px;
+}
+
+.diskDrive:hover { box-shadow: 3px 3px 5px black; }
+
+.diskDrive i {
+    font-size: 27px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.diskRefresh {
+    background: #f0f0f0;
+    border-radius: 20px;
+    box-shadow: 2px 2px 4px black;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 27px;
+    height: 40px;
+    margin-left: 20px;
+    vertical-align: middle;
+    width: 40px;
+}
+
+.diskRefresh:hover { box-shadow: 3px 3px 5px black; }
+
+.diskRefresh i {
+    padding-bottom: 4px;
+    vertical-align: middle;
+}
+
+.path {
+    border-bottom: solid 1px lightgray;
+    margin: 20px 5px;
+}
+
+.element {
+    color: #008080;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.element:hover { text-decoration: none; }
+
+.element i { margin-right: 8px; }
+
+#cancelCalculation {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 7px black;
+    left: 20%;
+    padding: 20px;
+    position: absolute;
+    text-align: center;
+    top: 40px;
+    width: 60%;
+    z-index: 10;
+}
+
+#preloader {
+    background: white;
+    height: 100%;
+    left: 0;
+    min-height: 500px;
+    opacity: 0.9;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
