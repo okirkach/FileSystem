@@ -55,6 +55,8 @@
 
                     if (error.data.ExceptionType == "System.UnauthorizedAccessException") {
                         bootbox.alert("You do not have rights to get access to this folder.");
+                    } else if (error.data.ExceptionType == "System.IO.IOException") {
+                        bootbox.alert("An error occurred during disk reading. Disk is not ready.");
                     } else {
                         bootbox.alert("Error during reading. Try a little bit later.");
                     }
