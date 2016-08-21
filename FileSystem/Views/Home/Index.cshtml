@@ -30,13 +30,13 @@
             <th>10Mb-50Mb</th>
             <th>More 100Mb</th>
         </tr>
-        <tr ng-hide="fileSystem.calculationCanceled">
+        <tr ng-hide="fileSystem.calculationInProcess">
             <td>{{fileSystem.smallFiles}}</td>
             <td>{{fileSystem.mediumFiles}}</td>
             <td>{{fileSystem.largeFiles}}</td>
         </tr>
-        <tr ng-show="fileSystem.calculationCanceled">
-            <td colspan="3"> Calculation of files was canceled.</td>
+        <tr ng-show="fileSystem.calculationInProcess">
+            <td colspan="3"> Files calculation in process...</td>
         </tr>
     </table>
     <div id="diskDrives">
@@ -67,15 +67,6 @@
             <div class="cssload-whirlpool"></div>
         </div>
     </div>
-    <div id="cancelCalculation" ng-show="fileSystem.cancelCalculation">
-        <p>
-            Calculation of files is going more than 5 second. Maybe You have too much files in this folder.
-            Do You want to wait when files will be calculated or stop the calculation?
-        </p>
-        <button class="btn btn-default" ng-click="fileSystem.refuseCancelation()">Wait</button>
-        <button class="btn btn-danger" ng-click="fileSystem.cancel()">Stop</button>
-    </div>
-
 </div>
 </body>
 </html>

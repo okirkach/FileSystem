@@ -1,11 +1,13 @@
 ﻿var app = angular.module("FileSystem", ["ngResource"])
     .controller("FileSystemCtrl", [
-        "$resource", "$timeout", function($resource, $timeout) {
+        "$resource", "$timeout", "$q", "$http", function($resource, $timeout, $q, $http) {
             var fileSystem = this;
+            var cancelRequest = $q.defer();
             fileSystem.folders = [];
             fileSystem.files = [];
             fileSystem.isRoot = true;
             fileSystem.loading = true;
+            fileSystem.calculationInProcess = false;
 
             //if the current path is shorter than 4 characters, it means that we are in root folder
             var isRootFunction = function(path) {
@@ -22,8 +24,6 @@
                     fileSystem.disks = resp.DiskNames;
                     fileSystem.loading = false;
                 });
-
-                
             };
 
             /**
@@ -32,26 +32,16 @@
             */
             var getStructure = function(path) {
                 fileSystem.loading = true;
-                fileSystem.calculationCanceled = false;
-                var timeout = $timeout(function() {
-                    fileSystem.cancelCalculation = true;
-                }, 5000);
                 var structure = $resource("/api/system/getFiles/?path=:path", { path: "@path" });
-                structure.get({ path: path }, function(resp) {
+
+                structure.get({ path: path }, function (resp) {
                     fileSystem.currentPath = resp.CurrentPath;
                     fileSystem.folders = resp.Folders;
                     fileSystem.files = resp.Files;
                     fileSystem.isRoot = isRootFunction(fileSystem.currentPath);
-                    fileSystem.smallFiles = resp.SmallFiles;
-                    fileSystem.mediumFiles = resp.MediumFiles;
-                    fileSystem.largeFiles = resp.LargeFiles;
                     fileSystem.loading = false;
-                    fileSystem.cancelCalculation = false;
-                    $timeout.cancel(timeout);
                 }, function(error) {
                     fileSystem.loading = false;
-                    fileSystem.cancelCalculation = false;
-                    $timeout.cancel(timeout);
 
                     if (error.data.ExceptionType == "System.UnauthorizedAccessException") {
                         bootbox.alert("You do not have rights to get access to this folder.");
@@ -62,8 +52,31 @@
                     }
                 });
 
-
             };
+
+
+            /**
+             * Files calcultion in current folder. 
+             * If the old calculation is still in process we stop it and start a new one.
+             */
+            var getFiles = function (path) {
+                if (fileSystem.calculationInProcess) {
+                    cancelRequest.resolve("New calculation started");
+                }
+                fileSystem.calculationInProcess = true;
+                cancelRequest = $q.defer();
+                $http({
+                    method: "GET",
+                    url: "/api/system/CalculateFiles/?path=" + path,
+                    timeout: cancelRequest.promise
+                }).then(function success(response) {
+                    fileSystem.smallFiles = response.data.Small;
+                    fileSystem.mediumFiles = response.data.Medium;
+                    fileSystem.largeFiles = response.data.Big;
+                    fileSystem.calculationInProcess = false;
+                });
+
+            }
 
             //This function assign to click event on the folder name
             fileSystem.getStructure = function(folder) {
@@ -72,28 +85,18 @@
                 }
                 var path = fileSystem.currentPath + folder;
                 getStructure(path);
+                getFiles(path);
             };
 
             //This function assign to click event on the disk icon
-            fileSystem.changeDisk = function(disk) {
+            fileSystem.changeDisk = function (disk) {
                 getStructure(disk);
+                getFiles(disk);
             };
 
             //This function assign to click event on the disk refresh button
             fileSystem.getDisks = function() {
                 getDisks();
-            };
-
-            //This function hide the window with question about cancellation of file calculation
-            fileSystem.refuseCancelation = function() {
-                fileSystem.cancelCalculation = false;
-            };
-
-            //This function send request to cancell the files calculation
-            fileSystem.cancel = function() {
-                $resource("/api/system/cancelCalculation/").get(function() {
-                    fileSystem.calculationCanceled = true;
-                });
             };
 
             //This function run on the application start up to get all disks

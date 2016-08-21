@@ -925,6 +925,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Drives.cs" />
+    <Compile Include="Models\Files.cs" />
     <Compile Include="Models\Structure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
